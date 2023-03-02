@@ -23,7 +23,7 @@ namespace RESTDemo
         }
 
         // Get all the Records
-        public ICommand AddUserCommand =>
+        public ICommand GetAllUsersCommand =>
             new Command(async () =>
             {
                 var url = $"{baseUrl}/users";
@@ -39,6 +39,15 @@ namespace RESTDemo
                         .DeserializeAsync<List<User>>(responseStream, _serializerOptions);
                     }
                 }
+            });
+
+        // Get Single User
+        public ICommand GetSingleUserCommand =>
+            new Command(async () =>
+            {
+                var url = $"{baseUrl}/users/25";
+                var response = 
+                    await client.GetStringAsync(url);
             });
     }
 }
