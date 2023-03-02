@@ -12,6 +12,7 @@ namespace RESTDemo
     {
         HttpClient client;
         JsonSerializerOptions _serializerOptions;
+        string baseUrl = "https://64008f0d29deaba5cb3a5609.mockapi.io";
         public MainViewModel()
         {
             client = new HttpClient();
@@ -20,10 +21,24 @@ namespace RESTDemo
                 WriteIndented = true,
             };
         }
-        public ICommand AddUserCommand =>
-            new Command(() =>
-            {
 
+        // Get all the Records
+        public ICommand AddUserCommand =>
+            new Command(async () =>
+            {
+                var url = $"{baseUrl}/users";
+                var response =
+                    await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    //var content = await response.Content.ReadAsStringAsync();
+                    using (var responseStream = await response.Content.ReadAsStreamAsync())
+                    {
+                        var data =
+                        await JsonSerializer
+                        .DeserializeAsync<List<User>>(responseStream, _serializerOptions);
+                    }
+                }
             });
     }
 }
