@@ -74,8 +74,6 @@ namespace RESTDemo
                 var response = await client.PostAsync(url, content);
             });
 
-
-
         // Update the Records
         public ICommand UpdateUserCommand =>
             new Command(async () =>
@@ -93,6 +91,14 @@ namespace RESTDemo
                     new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response =  await client.PutAsync(url, content);
+            });
+
+        // Delete Record
+        public ICommand DeleteUserCommand =>
+            new Command(async () =>
+            {
+                var url = $"{baseUrl}/users/10";
+                var response = await client.DeleteAsync(url);
             });
     }
 }
