@@ -49,5 +49,26 @@ namespace RESTDemo
                 var response = 
                     await client.GetStringAsync(url);
             });
+
+        // Add Record/User
+        public ICommand AddUserCommand =>
+            new Command(async () =>
+            {
+                var url = $"{baseUrl}/users";
+                var user =
+                new User
+                {
+                    createdAt = DateTime.Now,
+                    name = "Test Add User",
+                    avatar = "https://fakeimg.pl/350x200/?text=MAUI"
+                };
+                string json =
+                    JsonSerializer.Serialize<User>(user, _serializerOptions);
+
+                StringContent content =
+                    new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await client.PostAsync(url, content);
+            });
     }
 }
