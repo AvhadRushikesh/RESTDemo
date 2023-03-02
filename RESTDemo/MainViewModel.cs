@@ -13,6 +13,8 @@ namespace RESTDemo
         HttpClient client;
         JsonSerializerOptions _serializerOptions;
         string baseUrl = "https://64008f0d29deaba5cb3a5609.mockapi.io";
+        private List<User> Users;
+
         public MainViewModel()
         {
             client = new HttpClient();
@@ -37,6 +39,7 @@ namespace RESTDemo
                         var data =
                         await JsonSerializer
                         .DeserializeAsync<List<User>>(responseStream, _serializerOptions);
+                        Users = data;
                     }
                 }
             });
@@ -69,6 +72,27 @@ namespace RESTDemo
                     new StringContent(json, Encoding.UTF8, "application/json");
 
                 var response = await client.PostAsync(url, content);
+            });
+
+
+
+        // Update the Records
+        public ICommand UpdateUserCommand =>
+            new Command(async () =>
+            {
+                var user = Users.FirstOrDefault(x => x.id == "1");
+
+                var url = $"{baseUrl}/users/1";
+
+                user.name = "John";
+
+                string json =
+                    JsonSerializer.Serialize<User>(user, _serializerOptions);
+
+                StringContent content =
+                    new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response =  await client.PutAsync(url, content);
             });
     }
 }
